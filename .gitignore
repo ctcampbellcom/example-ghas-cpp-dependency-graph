@@ -36,3 +36,5 @@ vcpkg_installed/**
 
 # CMake
 build/**
+main.dSYM/
+main
