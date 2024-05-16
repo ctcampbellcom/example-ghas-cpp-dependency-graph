@@ -38,3 +38,4 @@ vcpkg_installed/**
 build/**
 main.dSYM/
 main
+CMakeUserPresets.json
