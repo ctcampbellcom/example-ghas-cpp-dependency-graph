@@ -7,7 +7,8 @@
 
 #define CHAR_ARRAY_SIZE 27
 
-char example(int socket, char data[]) {
+int receive(int socket) {
+  printf("Receiving...");
   char inputBuffer[CHAR_ARRAY_SIZE];
   int recvResult;
   int i;
@@ -16,20 +17,20 @@ char example(int socket, char data[]) {
   if (recvResult < 0)
   {
     printf("Error: %s\n", strerror(errno));
+    fflush(stdout);
     return -1;
   }
 
   inputBuffer[recvResult] = '\0';
   i = atoi(inputBuffer);
 
-  printf("Received: %d\n", i);
-  fflush(stdout);
-  // BAD: i has not been validated.
-  return data[i];
+  return i;
 }
 
 int main(int argc, char** argv)
 {
+    char myString[] = "abcdefghijklmnopqrstuvwxyz";
+
     // Create a socket
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -52,14 +53,22 @@ int main(int argc, char** argv)
 
     // Listen for incoming connections
     listen(sockfd, 5);
+    printf("Listening...");
+    fflush(stdout);
 
     // Accept an incoming connection
     int new_sockfd = accept(sockfd, NULL, NULL);
+    if (new_sockfd < 0) {
+      printf("Error: %s\n", strerror(errno));
+      fflush(stdout);
+      return 1;
+    }
+    printf("Accepting...");
+    fflush(stdout);
 
-    // Receive a response
-    char myString[] = "abcdefghijklmnopqrstuvwxyz";
-    char selected = example(sockfd, myString);
+    // Receive a request
+    int i = receive(new_sockfd);
 
     // Print the response
-    printf("Selected: %c\n", selected);
+    printf("Selected: %c\n", myString[i]);
 }
