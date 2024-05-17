@@ -9,11 +9,11 @@
 
 int receive(int socket) {
   printf("Receiving...");
-  char inputBuffer[CHAR_ARRAY_SIZE];
+  char inputBuffer[2];
   int recvResult;
   int i;
 
-  recvResult = recv(socket, inputBuffer, CHAR_ARRAY_SIZE - 1, 0);
+  recvResult = recv(socket, inputBuffer, 1, 0);
   if (recvResult < 0)
   {
     printf("Error: %s\n", strerror(errno));
@@ -29,13 +29,14 @@ int receive(int socket) {
 int main(int argc, char** argv)
 {
     setbuf(stdout, NULL);
+
     char myString[] = "abcdefghijklmnopqrstuvwxyz";
 
     // Create a socket
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
-        printf("Error: %s\n", strerror(errno));
-        return 1;
+      printf("Error: %s\n", strerror(errno));
+      return 1;
     }
 
     // Initialize the socket address structure
