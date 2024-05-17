@@ -17,7 +17,6 @@ int receive(int socket) {
   if (recvResult < 0)
   {
     printf("Error: %s\n", strerror(errno));
-    fflush(stdout);
     return -1;
   }
 
@@ -29,12 +28,13 @@ int receive(int socket) {
 
 int main(int argc, char** argv)
 {
+    setbuf(stdout, NULL);
     char myString[] = "abcdefghijklmnopqrstuvwxyz";
 
     // Create a socket
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
-        // Error creating socket
+        printf("Error: %s\n", strerror(errno));
         return 1;
     }
 
@@ -47,28 +47,25 @@ int main(int argc, char** argv)
     // Bind the socket to the address
     int bind_result = bind(sockfd, (struct sockaddr*)&addr, sizeof(addr));
     if (bind_result < 0) {
-        // Error binding socket
+        printf("Error: %s\n", strerror(errno));
         return 1;
     }
 
     // Listen for incoming connections
     listen(sockfd, 5);
     printf("Listening...");
-    fflush(stdout);
 
     // Accept an incoming connection
     int new_sockfd = accept(sockfd, NULL, NULL);
     if (new_sockfd < 0) {
       printf("Error: %s\n", strerror(errno));
-      fflush(stdout);
       return 1;
     }
     printf("Accepting...");
-    fflush(stdout);
 
     // Receive a request
     int i = receive(new_sockfd);
 
     // Print the response
-    printf("Selected: %c\n", myString[i]);
+    printf("Selected: %c\n", myString[i-1]);
 }
