@@ -39,3 +39,4 @@ build/**
 main.dSYM/
 main
 CMakeUserPresets.json
+example-ghas-cpp-dependency-graph.code-workspace
