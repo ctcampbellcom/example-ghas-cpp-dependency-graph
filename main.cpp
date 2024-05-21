@@ -5,7 +5,7 @@
 #include <string.h>
 #include <cerrno>
 
-#define CHAR_ARRAY_SIZE 27
+#define TCP_PORT 8080
 
 int receive(int socket) {
   printf("Receiving...");
@@ -29,6 +29,7 @@ int receive(int socket) {
 int main(int argc, char** argv)
 {
     setbuf(stdout, NULL);
+    printf("Setting up a new socket on port %d, %d\n", TCP_PORT, "please wait...");
 
     char myString[] = "abcdefghijklmnopqrstuvwxyz";
 

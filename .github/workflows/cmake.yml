@@ -21,26 +21,24 @@ env:
 jobs:
   cmake:
     runs-on: ubuntu-latest
-
-    # These steps assume an appropriate version of vcpkg is listed as a
-    # submodule in your git repo. If it is not, you must update this workflow
-    # to obtain it.
-
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: 'recursive'  
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Bootstrap vcpkg
-        run: ${{ github.workspace }}/vcpkg/bootstrap-vcpkg.sh
+      - name: vcpkg build
+        uses: johnwason/vcpkg-action@v6
+        with:
+          triplet: ${{ env.TRIPLET }}
+          manifest-dir: ${{ github.workspace }}
+          token: ${{ github.token }}
+          github-binarycache: true
 
       - name: Configure with CMake
         run: |
           cmake -B build -S ${{ github.workspace }} \
-          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+          -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake \
+          -DVCPKG_TARGET_TRIPLET=${{ env.TRIPLET }} \
+          -DVCPKG_MANIFEST_MODE=OFF
 
       - name: Build with CMake
         run: cmake --build build
-
-      - name: Hola, amigos
-        run: ${{ github.workspace }}/build/hola
